@@ -4,48 +4,48 @@
 #include <time.h>
 #include <conio.h>  
 
-#define ZUI_DA_JI_LU 1000
-#define ZUI_DA_YONG_HU 100
-#define ZUI_DA_MING_CHANG 20
-#define ZUI_DA_MI_MA 20
-#define ZUI_DA_LEI_BIE 20
-#define ZUI_DA_BEI_ZHU 50
+#define ZUIDAJILU 1000
+#define ZUIDAYONGHU 100
+#define ZUIDAMINGCHANG 20
+#define ZUIDAMIMA 20
+#define ZUIDALEIBIE 20
+#define ZUIDABEIZHU 50
 
 typedef struct {
-    char yong_hu_ming[ZUI_DA_MING_CHANG];
-    char mi_ma[ZUI_DA_MI_MA];
+    char yonghuming[ZUIDAMINGCHANG];
+    char mima[ZUIDAMIMA];
 } YongHu;
 
 typedef struct {
-    int lei_xing;
-    float jin_e;
-    char lei_bie[ZUI_DA_LEI_BIE];
-    char shi_jian[20];
-    char bei_zhu[ZUI_DA_BEI_ZHU];
+    int leixing;
+    float jine;
+    char leibie[ZUIDALEIBIE];
+    char shijian[20];
+    char beizhu[ZUIDABEIZHU];
 } XiaoFeiJiLu;
 
 typedef struct {
-    YongHu yong_hu_shu_zu[ZUI_DA_YONG_HU];
-    XiaoFeiJiLu xiao_fei_ji_lu[ZUI_DA_JI_LU];
-    int yong_hu_shu;
-    int ji_lu_shu;
-    int dang_qian_yong_hu;
+    YongHu yonghushuzu[ZUIDAYONGHU];
+    XiaoFeiJiLu xiaofeijilu[ZUIDAJILU];
+    int yonghushu;
+    int jilushu;
+    int dangqianyonghu;
 } XiTongShuJu;
 
 
-void shu_ru_mi_ma(char *mi_ma, int max_len) {
+void shurumima(char *mima, int maxlen) {
     int i = 0;
     char ch;
     while (1) {
-        ch = _getch(); 
+        ch = _getch();
         if (ch == '\r') {  
-            mi_ma[i] = '\0';
+            mima[i] = '\0';
             break;
         } else if (ch == '\b' && i > 0) {  
             i--;
             printf("\b \b"); 
-        } else if (ch >= 32 && ch <= 126 && i < max_len - 1) { 
-            mi_ma[i++] = ch;
+        } else if (ch >= 32 && ch <= 126 && i < maxlen - 1) { 
+            mima[i++] = ch;
             printf("*"); 
         }
     }
@@ -53,246 +53,246 @@ void shu_ru_mi_ma(char *mi_ma, int max_len) {
 }
 
 
-void zhu_ce_yong_hu(XiTongShuJu *xtsj) {
-    if (xtsj->yong_hu_shu >= ZUI_DA_YONG_HU) {
-        printf("ÓÃ»§ÊıÁ¿ÒÑ´ïÉÏÏŞ£¬ÎŞ·¨×¢²á£¡\n");
+void zhuceyonghu(XiTongShuJu *xtsj) {
+    if (xtsj->yonghushu >= ZUIDAYONGHU) {
+        printf("ç”¨æˆ·æ•°é‡å·²è¾¾ä¸Šé™ï¼Œæ— æ³•æ³¨å†Œï¼\n");
         return;
     }
-    YongHu xin_yong_hu;
-    printf("===== ÓÃ»§×¢²á =====\n");
-    printf("ÇëÊäÈëÓÃ»§Ãû£º");
-    scanf("%s", xin_yong_hu.yong_hu_ming);
+    YongHu xinyonghu;
+    printf("===== ç”¨æˆ·æ³¨å†Œ =====\n");
+    printf("è¯·è¾“å…¥ç”¨æˆ·åï¼š");
+    scanf("%s", xinyonghu.yonghuming);
 
-    for (int i = 0; i < xtsj->yong_hu_shu; i++) {
-        if (strcmp(xtsj->yong_hu_shu_zu[i].yong_hu_ming, xin_yong_hu.yong_hu_ming) == 0) {
-            printf("ÓÃ»§ÃûÒÑ´æÔÚ£¡\n");
+    for (int i = 0; i < xtsj->yonghushu; i++) {
+        if (strcmp(xtsj->yonghushuzu[i].yonghuming, xinyonghu.yonghuming) == 0) {
+            printf("ç”¨æˆ·åå·²å­˜åœ¨ï¼\n");
             return;
         }
     }
-    printf("ÇëÊäÈëÃÜÂë£º");
-    shu_ru_mi_ma(xin_yong_hu.mi_ma, ZUI_DA_MI_MA); 
+    printf("è¯·è¾“å…¥å¯†ç ï¼š");
+    shurumima(xinyonghu.mima, ZUIDAMIMA); 
 
-    xtsj->yong_hu_shu_zu[xtsj->yong_hu_shu++] = xin_yong_hu;
-    bao_cun_yong_hu_er_jin_zhi(xtsj);
-    printf("×¢²á³É¹¦£¡\n");
+    xtsj->yonghushuzu[xtsj->yonghushu++] = xinyonghu;
+    baocunyonghuerjinzhi(xtsj);
+    printf("æ³¨å†ŒæˆåŠŸï¼");
 }
 
-void bao_cun_yong_hu_er_jin_zhi(XiTongShuJu *xtsj) {
+void baocunyonghuerjinzhi(XiTongShuJu *xtsj) {
     FILE *fp = fopen("yonghu.bin", "wb");
     if (!fp) {
-        printf("±£´æÓÃ»§Ê§°Ü£¡\n");
+        printf("ä¿å­˜ç”¨æˆ·å¤±è´¥ï¼\n");
         return;
     }
-    fwrite(&xtsj->yong_hu_shu, sizeof(int), 1, fp);
-    fwrite(xtsj->yong_hu_shu_zu, sizeof(YongHu), xtsj->yong_hu_shu, fp);
+    fwrite(&xtsj->yonghushu, sizeof(int), 1, fp);
+    fwrite(xtsj->yonghushuzu, sizeof(YongHu), xtsj->yonghushu, fp);
     fclose(fp);
 }
 
-int jia_zai_yong_hu_er_jin_zhi(XiTongShuJu *xtsj) {
+int jiazaiyonghuerjinzhi(XiTongShuJu *xtsj) {
     FILE *fp = fopen("yonghu.bin", "rb");
     if (!fp) return 0;
-    fread(&xtsj->yong_hu_shu, sizeof(int), 1, fp);
-    fread(xtsj->yong_hu_shu_zu, sizeof(YongHu), xtsj->yong_hu_shu, fp);
+    fread(&xtsj->yonghushu, sizeof(int), 1, fp);
+    fread(xtsj->yonghushuzu, sizeof(YongHu), xtsj->yonghushu, fp);
     fclose(fp);
-    return xtsj->yong_hu_shu;
+    return xtsj->yonghushu;
 }
 
-void tian_jia_ji_lu(XiTongShuJu *xtsj) {
-    if (xtsj->ji_lu_shu >= ZUI_DA_JI_LU) {
-        printf("¼ÇÂ¼ÊıÁ¿ÒÑ´ïÉÏÏŞ£¡\n");
+void tianjiajilu(XiTongShuJu *xtsj) {
+    if (xtsj->jilushu >= ZUIDAJILU) {
+        printf("è®°å½•æ•°é‡å·²è¾¾ä¸Šé™ï¼\n");
         return;
     }
-    XiaoFeiJiLu xin_ji_lu;
-    printf("===== Ìí¼ÓÏû·Ñ¼ÇÂ¼ =====\n");
-    printf("ÇëÑ¡ÔñÀàĞÍ£¨0-Ö§³ö£¬1-ÊÕÈë£©£º");
-    scanf("%d", &xin_ji_lu.lei_xing);
-    if (xin_ji_lu.lei_xing != 0 && xin_ji_lu.lei_xing != 1) {
-        printf("ÀàĞÍ´íÎó£¡\n");
+    XiaoFeiJiLu xinjilu;
+    printf("===== æ·»åŠ æ¶ˆè´¹è®°å½• =====\n");
+    printf("è¯·é€‰æ‹©ç±»å‹ï¼ˆ0-æ”¯å‡ºï¼Œ1-æ”¶å…¥ï¼‰ï¼š");
+    scanf("%d", &xinjilu.leixing);
+    if (xinjilu.leixing != 0 && xinjilu.leixing != 1) {
+        printf("ç±»å‹é”™è¯¯ï¼\n");
         return;
     }
-    printf("ÇëÊäÈë½ğ¶î£º");
-    scanf("%f", &xin_ji_lu.jin_e);
-    printf("ÇëÊäÈëÀà±ğ£º");
-    scanf("%s", xin_ji_lu.lei_bie);
-    huo_qu_dang_qian_shi_jian(xin_ji_lu.shi_jian);
-    printf("ÇëÊäÈë±¸×¢£º");
-    scanf("%s", xin_ji_lu.bei_zhu);
+    printf("è¯·è¾“å…¥é‡‘é¢ï¼š");
+    scanf("%f", &xinjilu.jine);
+    printf("è¯·è¾“å…¥ç±»åˆ«ï¼š");
+    scanf("%s", xinjilu.leibie);
+    huoqudangqianshijian(xinjilu.shijian);
+    printf("è¯·è¾“å…¥å¤‡æ³¨ï¼š");
+    scanf("%s", xinjilu.beizhu);
 
-    xtsj->xiao_fei_ji_lu[xtsj->ji_lu_shu++] = xin_ji_lu;
-    bao_cun_ji_lu_er_jin_zhi(xtsj);
-    printf("¼ÇÂ¼Ìí¼Ó³É¹¦£¡\n");
+    xtsj->xiaofeijilu[xtsj->jilushu++] = xinjilu;
+    baocunjiluerjinzhi(xtsj);
+    printf("è®°å½•æ·»åŠ æˆåŠŸï¼\n");
 }
 
-void huo_qu_dang_qian_shi_jian(char *sj_str) {
+void huoqudangqianshijian(char *sjstr) {
     time_t now = time(NULL);
     struct tm *t = localtime(&now);
-    sprintf(sj_str, "%04d-%02d-%02d %02d:%02d",
+    sprintf(sjstr, "%04d-%02d-%02d %02d:%02d",
             t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
             t->tm_hour, t->tm_min);
 }
 
-void bao_cun_ji_lu_er_jin_zhi(XiTongShuJu *xtsj) {
-    char wen_jian_ming[50];
-    sprintf(wen_jian_ming, "jilu_%s.bin", xtsj->yong_hu_shu_zu[xtsj->dang_qian_yong_hu].yong_hu_ming);
-    FILE *fp = fopen(wen_jian_ming, "wb");
+void baocunjiluerjinzhi(XiTongShuJu *xtsj) {
+    char wenjianming[50];
+    sprintf(wenjianming, "jilu%s.bin", xtsj->yonghushuzu[xtsj->dangqianyonghu].yonghuming);
+    FILE *fp = fopen(wenjianming, "wb");
     if (!fp) {
-        printf("±£´æ¼ÇÂ¼Ê§°Ü£¡\n");
+        printf("ä¿å­˜è®°å½•å¤±è´¥ï¼\n");
         return;
     }
-    fwrite(&xtsj->ji_lu_shu, sizeof(int), 1, fp);
-    fwrite(xtsj->xiao_fei_ji_lu, sizeof(XiaoFeiJiLu), xtsj->ji_lu_shu, fp);
+    fwrite(&xtsj->jilushu, sizeof(int), 1, fp);
+    fwrite(xtsj->xiaofeijilu, sizeof(XiaoFeiJiLu), xtsj->jilushu, fp);
     fclose(fp);
 }
 
-int jia_zai_ji_lu_er_jin_zhi(XiTongShuJu *xtsj) {
-    char wen_jian_ming[50];
-    sprintf(wen_jian_ming, "jilu_%s.bin", xtsj->yong_hu_shu_zu[xtsj->dang_qian_yong_hu].yong_hu_ming);
-    FILE *fp = fopen(wen_jian_ming, "rb");
+int jiazaijiluerjinzhi(XiTongShuJu *xtsj) {
+    char wenjianming[50];
+    sprintf(wenjianming, "jilu%s.bin", xtsj->yonghushuzu[xtsj->dangqianyonghu].yonghuming);
+    FILE *fp = fopen(wenjianming, "rb");
     if (!fp) {
-        xtsj->ji_lu_shu = 0;
+        xtsj->jilushu = 0;
         return 0;
     }
-    fread(&xtsj->ji_lu_shu, sizeof(int), 1, fp);
-    fread(xtsj->xiao_fei_ji_lu, sizeof(XiaoFeiJiLu), xtsj->ji_lu_shu, fp);
+    fread(&xtsj->jilushu, sizeof(int), 1, fp);
+    fread(xtsj->xiaofeijilu, sizeof(XiaoFeiJiLu), xtsj->jilushu, fp);
     fclose(fp);
-    return xtsj->ji_lu_shu;
+    return xtsj->jilushu;
 }
 
-void cha_xun_ji_lu(XiTongShuJu *xtsj) {
-    int xuan_ze;
-    printf("===== Ïû·Ñ¼ÇÂ¼²éÑ¯ =====\n");
-    printf("1. ²éÑ¯ËùÓĞ¼ÇÂ¼\n");
-    printf("2. °´Àà±ğ²éÑ¯\n");
-    printf("3. °´½ğ¶î·¶Î§²éÑ¯\n");
-    printf("ÇëÑ¡Ôñ£º");
-    scanf("%d", &xuan_ze);
-    if (xtsj->ji_lu_shu == 0) {
-        printf("ÔİÎŞ¼ÇÂ¼£¡\n");
+void chaxunjilu(XiTongShuJu *xtsj) {
+    int xuanze;
+    printf("===== æ¶ˆè´¹è®°å½•æŸ¥è¯¢ =====\n");
+    printf("1. æŸ¥è¯¢æ‰€æœ‰è®°å½•\n");
+    printf("2. æŒ‰ç±»åˆ«æŸ¥è¯¢\n");
+    printf("3. æŒ‰é‡‘é¢èŒƒå›´æŸ¥è¯¢\n");
+    printf("è¯·é€‰æ‹©ï¼š");
+    scanf("%d", &xuanze);
+    if (xtsj->jilushu == 0) {
+        printf("æš‚æ— è®°å½•ï¼\n");
         return;
     }
-    switch (xuan_ze) {
+    switch (xuanze) {
         case 1:
-            printf("\nÀàĞÍ\t½ğ¶î\tÀà±ğ\tÊ±¼ä\t\t±¸×¢\n");
-            for (int i = 0; i < xtsj->ji_lu_shu; i++) {
+            printf("\nç±»å‹\té‡‘é¢\tç±»åˆ«\tæ—¶é—´\t\tå¤‡æ³¨\n");
+            for (int i = 0; i < xtsj->jilushu; i++) {
                 printf("%s\t%.2f\t%s\t%s\t%s\n",
-                       xtsj->xiao_fei_ji_lu[i].lei_xing ? "ÊÕÈë" : "Ö§³ö",
-                       xtsj->xiao_fei_ji_lu[i].jin_e,
-                       xtsj->xiao_fei_ji_lu[i].lei_bie,
-                       xtsj->xiao_fei_ji_lu[i].shi_jian,
-                       xtsj->xiao_fei_ji_lu[i].bei_zhu);
+                       xtsj->xiaofeijilu[i].leixing ? "æ”¶å…¥" : "æ”¯å‡º",
+                       xtsj->xiaofeijilu[i].jine,
+                       xtsj->xiaofeijilu[i].leibie,
+                       xtsj->xiaofeijilu[i].shijian,
+                       xtsj->xiaofeijilu[i].beizhu);
             }
             break;
         case 2: {
-            char lei_bie[ZUI_DA_LEI_BIE];
-            printf("Àà±ğ£º");
-            scanf("%s", lei_bie);
-            printf("\nÀàĞÍ\t½ğ¶î\tÊ±¼ä\t\t±¸×¢\n");
-            int zhao_dao = 0;
-            for (int i = 0; i < xtsj->ji_lu_shu; i++) {
-                if (strcmp(xtsj->xiao_fei_ji_lu[i].lei_bie, lei_bie) == 0) {
+            char leibie[ZUIDALEIBIE];
+            printf("ç±»åˆ«ï¼š");
+            scanf("%s", leibie);
+            printf("\nç±»å‹\té‡‘é¢\tæ—¶é—´\t\tå¤‡æ³¨\n");
+            int zhaodao = 0;
+            for (int i = 0; i < xtsj->jilushu; i++) {
+                if (strcmp(xtsj->xiaofeijilu[i].leibie, leibie) == 0) {
                     printf("%s\t%.2f\t%s\t%s\n",
-                           xtsj->xiao_fei_ji_lu[i].lei_xing ? "ÊÕÈë" : "Ö§³ö",
-                           xtsj->xiao_fei_ji_lu[i].jin_e,
-                           xtsj->xiao_fei_ji_lu[i].shi_jian,
-                           xtsj->xiao_fei_ji_lu[i].bei_zhu);
-                    zhao_dao = 1;
+                           xtsj->xiaofeijilu[i].leixing ? "æ”¶å…¥" : "æ”¯å‡º",
+                           xtsj->xiaofeijilu[i].jine,
+                           xtsj->xiaofeijilu[i].shijian,
+                           xtsj->xiaofeijilu[i].beizhu);
+                    zhaodao = 1;
                 }
             }
-            if (!zhao_dao) printf("ÎŞ½á¹û\n");
+            if (!zhaodao) printf("æ— ç»“æœ\nn");
             break;
         }
         case 3: {
-            float zui_xiao, zui_da;
-            printf("×îĞ¡½ğ¶î£º"); scanf("%f", &zui_xiao);
-            printf("×î´ó½ğ¶î£º"); scanf("%f", &zui_da);
-            printf("\nÀàĞÍ\t½ğ¶î\tÀà±ğ\tÊ±¼ä\t\t±¸×¢\n");
-            int zhao_dao = 0;
-            for (int i = 0; i < xtsj->ji_lu_shu; i++) {
-                if (xtsj->xiao_fei_ji_lu[i].jin_e >= zui_xiao && xtsj->xiao_fei_ji_lu[i].jin_e <= zui_da) {
+            float zuixiao, zuida;
+            printf("æœ€å°é‡‘é¢ï¼š"); scanf("%f", &zuixiao);
+            printf("æœ€å¤§é‡‘é¢ï¼š"); scanf("%f", &zuida);
+            printf("\nç±»å‹\té‡‘é¢\tç±»åˆ«\tæ—¶é—´\t\tå¤‡æ³¨\n");
+            int zhaodao = 0;
+            for (int i = 0; i < xtsj->jilushu; i++) {
+                if (xtsj->xiaofeijilu[i].jine >= zuixiao && xtsj->xiaofeijilu[i].jine <= zuida) {
                     printf("%s\t%.2f\t%s\t%s\t%s\n",
-                           xtsj->xiao_fei_ji_lu[i].lei_xing ? "ÊÕÈë" : "Ö§³ö",
-                           xtsj->xiao_fei_ji_lu[i].jin_e,
-                           xtsj->xiao_fei_ji_lu[i].lei_bie,
-                           xtsj->xiao_fei_ji_lu[i].shi_jian,
-                           xtsj->xiao_fei_ji_lu[i].bei_zhu);
-                    zhao_dao = 1;
+                           xtsj->xiaofeijilu[i].leixing ? "æ”¶å…¥" : "æ”¯å‡º",
+                           xtsj->xiaofeijilu[i].jine,
+                           xtsj->xiaofeijilu[i].leibie,
+                           xtsj->xiaofeijilu[i].shijian,
+                           xtsj->xiaofeijilu[i].beizhu);
+                    zhaodao = 1;
                 }
             }
-            if (!zhao_dao) printf("ÎŞ½á¹û\n");
+            if (!zhaodao) printf("æ— ç»“æœ\n");
             break;
         }
         default:
-            printf("ÊäÈë´íÎó\n");
+            printf("è¾“å…¥é”™è¯¯\n");
     }
 }
 
-void xian_shi_cai_dan() {
-    printf("\n===== Ñ§Éú¸öÈËÏû·Ñ¹ÜÀíÏµÍ³ =====\n");
-    printf("1. ×¢²á\n");
-    printf("2. µÇÂ¼\n");
-    printf("3. ÍË³ö\n");
-    printf("ÇëÑ¡Ôñ£º");
+void xianshicaidan() {
+    printf("\n===== å­¦ç”Ÿä¸ªäººæ¶ˆè´¹ç®¡ç†ç³»ç»Ÿ =====\n");
+    printf("1. æ³¨å†Œ\n");
+    printf("2. ç™»å½•\n");
+    printf("3. é€€å‡º\n");
+    printf("è¯·é€‰æ‹©ï¼š");
 }
 
-int deng_lu_yong_hu(XiTongShuJu *xtsj) {
-    char yhm[ZUI_DA_MING_CHANG], mm[ZUI_DA_MI_MA];
-    printf("===== µÇÂ¼ =====\n");
-    printf("ÓÃ»§Ãû£º"); scanf("%s", yhm);
-    printf("ÃÜÂë£º");
-    shu_ru_mi_ma(mm, ZUI_DA_MI_MA); 
+int dengluyonghu(XiTongShuJu *xtsj) {
+    char yhm[ZUIDAMINGCHANG], mm[ZUIDAMIMA];
+    printf("===== ç™»å½• =====\n");
+    printf("ç”¨æˆ·å"); scanf("%s", yhm);
+    printf("å¯†ç ï¼š");
+    shurumima(mm, ZUIDAMIMA); 
 
-    for (int i = 0; i < xtsj->yong_hu_shu; i++) {
-        if (strcmp(xtsj->yong_hu_shu_zu[i].yong_hu_ming, yhm) == 0) {
-            if (strcmp(xtsj->yong_hu_shu_zu[i].mi_ma, mm) == 0) {
-                xtsj->dang_qian_yong_hu = i;
-                jia_zai_ji_lu_er_jin_zhi(xtsj);
-                printf("µÇÂ¼³É¹¦£¡\n");
+    for (int i = 0; i < xtsj->yonghushu; i++) {
+        if (strcmp(xtsj->yonghushuzu[i].yonghuming, yhm) == 0) {
+            if (strcmp(xtsj->yonghushuzu[i].mima, mm) == 0) {
+                xtsj->dangqianyonghu = i;
+                jiazaijiluerjinzhi(xtsj);
+                printf("ç™»å½•æˆåŠŸ\n");
                 return 1;
             } else {
-                printf("ÃÜÂë´íÎó\n");
+                printf("å¯†ç é”™è¯¯\n");
                 return 0;
             }
         }
     }
-    printf("ÓÃ»§²»´æÔÚ\n");
+    printf("ç”¨æˆ·ä¸å­˜åœ¨\n");
     return 0;
 }
 
-void yong_hu_cai_dan(XiTongShuJu *xtsj) {
-    int xuan_ze;
+void yonghucaidan(XiTongShuJu *xtsj) {
+    int xuanze;
     while (1) {
-        printf("\n1. Ìí¼ÓÏû·Ñ¼ÇÂ¼\n2. ²éÑ¯¼ÇÂ¼\n3. ·µ»ØÖ÷²Ëµ¥\nÑ¡Ôñ£º");
-        scanf("%d", &xuan_ze);
-        switch (xuan_ze) {
-            case 1: tian_jia_ji_lu(xtsj); break;
-            case 2: cha_xun_ji_lu(xtsj); break;
+        printf("\n1. æ·»åŠ æ¶ˆè´¹è®°å½•\n2. æŸ¥è¯¢è®°å½•\n3. è¿”å›ä¸»èœå•\né€‰æ‹©ï¼š");
+        scanf("%d", &xuanze);
+        switch (xuanze) {
+            case 1: tianjiajilu(xtsj); break;
+            case 2: chaxunjilu(xtsj); break;
             case 3:
-                xtsj->dang_qian_yong_hu = -1;
-                xtsj->ji_lu_shu = 0;
+                xtsj->dangqianyonghu = -1;
+                xtsj->jilushu = 0;
                 return;
             default:
-                printf("ÊäÈë´íÎó\n");
+                printf("è¾“å…¥é”™è¯¯\n");
         }
     }
 }
 
 int main() {
     XiTongShuJu xtsj = {0};
-    jia_zai_yong_hu_er_jin_zhi(&xtsj);
-    int xuan_ze;
+    jiazaiyonghuerjinzhi(&xtsj);
+    int xuanze;
     while (1) {
-        xian_shi_cai_dan();
-        scanf("%d", &xuan_ze);
-        switch (xuan_ze) {
-            case 1: zhu_ce_yong_hu(&xtsj); break;
+        xianshicaidan();
+        scanf("%d", &xuanze);
+        switch (xuanze) {
+            case 1: zhuceyonghu(&xtsj); break;
             case 2:
-                if (deng_lu_yong_hu(&xtsj)) yong_hu_cai_dan(&xtsj);
+                if (dengluyonghu(&xtsj)) yonghucaidan(&xtsj);
                 break;
             case 3:
-                printf("ÍË³öÏµÍ³\n");
+                printf("é€€å‡ºç³»ç»Ÿ\n");
                 return 0;
             default:
-                printf("ÊäÈë´íÎó\n");
+                printf("è¾“å…¥é”™è¯¯\n");
         }
     }
     return 0;
